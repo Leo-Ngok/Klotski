@@ -1,0 +1,14 @@
+<RCC>
+    <qresource prefix="/chess_pieces">
+        <file>Assets/Chesspieces_img/CAO_CAO.PNG</file>
+        <file>Assets/Chesspieces_img/GUAN_YU.PNG</file>
+        <file>Assets/Chesspieces_img/HUANG_ZHONG.PNG</file>
+        <file>Assets/Chesspieces_img/MA_CHAO.PNG</file>
+        <file>Assets/Chesspieces_img/SOLDIER.PNG</file>
+        <file>Assets/Chesspieces_img/ZHANG_FEI.PNG</file>
+        <file>Assets/Chesspieces_img/ZHAO_YUN.PNG</file>
+    </qresource>
+    <qresource prefix="/chessboard_init_config">
+        <file>Assets/Initial_configurations/default.json</file>
+    </qresource>
+</RCC>

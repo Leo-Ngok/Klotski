@@ -1,0 +1,75 @@
+{
+    "name": "横刀立马",
+    "chesspieces": [
+        {
+            "name": "CAO_CAO",
+            "pos": [
+                1,
+                0
+            ]
+        },
+        {
+            "name": "MA_CHAO",
+            "pos": [
+                0,
+                0
+            ]
+        },
+        {
+            "name": "HUANG_ZHONG",
+            "pos": [
+                3,
+                0
+            ]
+        },
+        {
+            "name": "ZHANG_FEI",
+            "pos": [
+                0,
+                2
+            ]
+        },
+        {
+            "name": "GUAN_YU",
+            "pos": [
+                1,
+                2
+            ]
+        },
+        {
+            "name": "ZHAO_YUN",
+            "pos": [
+                3,
+                2
+            ]
+        },
+        {
+            "name": "SOLDIER",
+            "pos": [
+                1,
+                3
+            ]
+        },
+        {
+            "name": "SOLDIER",
+            "pos": [
+                2,
+                3
+            ]
+        },
+        {
+            "name": "SOLDIER",
+            "pos": [
+                0,
+                4
+            ]
+        },
+        {
+            "name": "SOLDIER",
+            "pos": [
+                3,
+                4
+            ]
+        }
+    ]
+}
