@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include "gamecontroller.h"
+#include "statecontroller.h"
 #include <QMainWindow>
 
 QT_BEGIN_NAMESPACE
@@ -22,5 +23,6 @@ signals:
 private:
     Ui::MainWindow *ui;
     GameController *controller;
+    StateController *stateController;
 };
 #endif // MAINWINDOW_H

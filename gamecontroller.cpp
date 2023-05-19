@@ -6,9 +6,7 @@ GameController::GameController(QObject *parent)
     this->chessBoard = nullptr;
     this->cp = nullptr;
     sel_chess = nullptr;
-    flash_timer = new QTimer(this);
-    flash_timer->setInterval(500);
-    QObject::connect(flash_timer, SIGNAL(timeout()), this, SLOT(OnFlashElapsed()));
+    counter_disp = nullptr;
 }
 
 
@@ -18,7 +16,6 @@ void GameController::ConstructChessboard() {
     chessBoard->show();
 }
 
-#include <QDir>
 void GameController::LoadInitFile(const char* filename) {
     chessboardinitconfig = new QFile(filename);
     if(!chessboardinitconfig->open(QFile::ReadOnly)) {
@@ -28,12 +25,17 @@ void GameController::LoadInitFile(const char* filename) {
 
 }
 void GameController::ConstructChesspieces() {
+    sel_chess = nullptr;
     QJsonDocument jsdoc = QJsonDocument::fromJson(chessboardinitconfig->readAll());
+    chessboardinitconfig->close();
+    chessboardinitconfig->deleteLater();
+    chessboardinitconfig = nullptr;
     QJsonObject json = jsdoc.object();
     if(json.contains("chesspieces") && json["chesspieces"].isArray()) {
         QJsonArray chess_list = json["chesspieces"].toArray();
         size_t n_chesspiece = chess_list.count();
         cp = new Chesspiece*[n_chesspiece];
+        chess_count = n_chesspiece;
         for(size_t k = 0; k < n_chesspiece; ++k) {
             auto chess_cfg = chess_list[k].toObject();
             int x = -1;
@@ -57,12 +59,65 @@ void GameController::ConstructChesspieces() {
         }
     }
 }
+void GameController::ConstructUI() {
 
+    flash_timer = new QTimer(this);
+    flash_timer->setInterval(500);
+    QObject::connect(flash_timer, SIGNAL(timeout()), this, SLOT(OnFlashElapsed()));
+
+    stopwatch = new QTimer(this);
+    stopwatch->setInterval(1000);
+    QObject::connect(stopwatch, SIGNAL(timeout()), this, SLOT(OnStopwatchElapsed()));
+
+    time_caption = new QLabel(dynamic_cast<QWidget*>(parent()));
+    time_caption->setGeometry(550, 60, 120, 40);
+    time_caption->setText("用时");
+    time_caption->show();
+
+
+    counter_disp = new QLCDNumber(dynamic_cast<QWidget*>(parent()));
+    counter_disp->setGeometry(550, 90, 120, 90);
+    counter_disp->setFont(QFont("MingLiU", 40, -1, false));
+    counter_disp->setDigitCount(4);
+    counter_disp->display(0);
+    counter_disp->setSegmentStyle(QLCDNumber::Flat);
+    counter_disp->setFrameShape(QFrame::NoFrame);
+    counter_disp->show();
+
+
+
+
+    step_caption = new QLabel(dynamic_cast<QWidget*>(parent()));
+    step_caption->setGeometry(550, 220, 120, 40);
+    step_caption->setText("走子次数");
+    step_caption->show();
+
+
+    step_disp = new QLCDNumber(dynamic_cast<QWidget*>(parent()));
+    step_disp->setGeometry(550, 280, 120, 90);
+    step_disp->setFont(QFont("MingLiU", 40, -1, false));
+    step_disp->setDigitCount(4);
+    step_disp->display(0);
+    step_disp->setSegmentStyle(QLCDNumber::Flat);
+    step_disp->setFrameShape(QFrame::NoFrame);
+    step_disp->show();
+
+    quitButton = new QPushButton(dynamic_cast<QWidget*>(parent()));
+    quitButton->setGeometry(550, 600, 100, 60);
+    quitButton->setText("退出");
+    quitButton->show();
+
+    QObject::connect(quitButton, SIGNAL(clicked()), this, SLOT(Reset()));
+
+    dynamic_cast<QWidget*>(parent())->setGeometry(100,100, 1024, 768);
+}
 void GameController::LoadGame() {
 
     ConstructChessboard();
     LoadInitFile("D:/github/THU_PASS/year2/temp/yoyo/Klotski/Klotski/Assets/Initial_configurations/default.json");
     ConstructChesspieces();
+    ConstructUI();
+    stopwatch->start();
 }
 
 void GameController::OnMouseClick(QMouseEvent *e) {
@@ -95,12 +150,23 @@ void GameController::OnMouseClick(QMouseEvent *e) {
                         qDebug() << "Chess moved";
                         flash_timer->stop();
                         sel_chess->setVisible(true);
+                        if(sel_chess->type == ChessType::CAO_CAO &&
+                           sel_chess->abstract_x == 1 &&
+                           sel_chess->abstract_y == 3) {
+                            GameOver();
+                        }
                         sel_chess = nullptr;
                     } else {
-                        qDebug() << "Invalid move: blocked by other chesspieces";
+                        QMessageBox msgBox;
+                        msgBox.setText("走子无效: 需要移除障碍物");
+                        msgBox.exec();
+
+                        //qDebug() << "Invalid move: blocked by other chesspieces";
                     }
                 } else {
-                    qDebug() << "Not adjacent!";
+                    QMessageBox msgBox;
+                    msgBox.setText("走子无效: 目标位置不相邻");
+                    msgBox.exec();
                 }
             }
         }
@@ -188,6 +254,7 @@ bool GameController::AdjustByType(Chesspiece *piece, MoveType mvt) {
     bool res = AdjustChessList(piece, x, y);
     if(res) {
         piece->setCoordinate(x, y);
+        step_disp->display(++step_count);
     } else {
         AdjustChessList(piece, piece->abstract_x, piece->abstract_y);
     }
@@ -286,4 +353,52 @@ MoveType GameController::getMoveType(int x, int y) {
     }
 
     return MoveType::INVALID;
+}
+
+
+void GameController::Reset() {
+    for(size_t k = 0; k < chess_count; ++k) {
+        this->cp[k]->deleteLater();
+    }
+    QObject::disconnect(quitButton, SIGNAL(clicked()), this, SLOT(Reset()));
+    QObject::disconnect(stopwatch, SIGNAL(timeout()), this, SLOT(OnStopwatchElapsed()));
+    QObject::disconnect(flash_timer, SIGNAL(timeout()), this, SLOT(OnFlashElapsed()));
+    chessBoard->deleteLater();
+    counter_disp->deleteLater();
+    step_disp->deleteLater();
+    step_caption->deleteLater();
+    time_caption->deleteLater();
+    stopwatch->deleteLater();
+    flash_timer->deleteLater();
+    quitButton->deleteLater();
+    sel_chess = nullptr;
+    stopwatch = nullptr;
+    flash_timer = nullptr;
+    chessBoard = nullptr;
+    counter_disp = nullptr;
+    curr_time_elapsed = 0;
+    step_count = 0;
+    emit BackToHomeScreen();
+}
+
+
+void GameController::OnStopwatchElapsed() {
+    counter_disp->display(++this->curr_time_elapsed);
+}
+
+void GameController::GameOver() {
+    stopwatch->stop();
+    QMessageBox msgBox;
+    msgBox.setText("完成！");
+    msgBox.exec();
+    bool ok =  false;
+
+    QString name;
+    while(!ok)
+    name = QInputDialog::getText(
+                dynamic_cast<QWidget *>(parent()), tr("游戏记录"),
+                tr("请输入用户名，以便记录成绩"), QLineEdit::Normal,
+                QDir::home().dirName(), &ok);
+
+    emit GameEnded(name);
 }

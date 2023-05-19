@@ -7,9 +7,12 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     controller = new GameController(this);
+    //controller->LoadGame();
+    stateController = new StateController(this);
+    stateController->setGameController(controller);
+    stateController->LoadHomeScreen();
     QObject::connect(this, SIGNAL(mouseClick(QMouseEvent *)),
-                     controller, SLOT(OnMouseClick(QMouseEvent *)));
-    controller->LoadGame();
+                     stateController, SLOT(MouseClick(QMouseEvent *)));
 }
 
 MainWindow::~MainWindow()

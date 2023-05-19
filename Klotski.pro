@@ -13,13 +13,17 @@ SOURCES += \
     chesspiece.cpp \
     gamecontroller.cpp \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    recordhandler.cpp \
+    statecontroller.cpp
 
 HEADERS += \
     chessboard.h \
     chesspiece.h \
     gamecontroller.h \
-    mainwindow.h
+    mainwindow.h \
+    recordhandler.h \
+    statecontroller.h
 
 FORMS += \
     mainwindow.ui
