@@ -2,10 +2,8 @@
 #include <QPainter>
 #include <cassert>
 Chesspiece::Chesspiece(QWidget *parent)
-    : QWidget{parent}
-{
-
-}
+    : QWidget{parent}, type{ChessType::INVALID}, position{cplx(-1,-1)}
+{}
 
 void Chesspiece::setPosition(cplx pos) {
     this->position = pos;

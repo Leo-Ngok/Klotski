@@ -18,8 +18,6 @@ public:
     ~MainWindow();
 protected:
     void mousePressEvent(QMouseEvent *);
-signals:
-    void mouseClick(QMouseEvent *);
 private:
     Ui::MainWindow *ui;
     GameController *controller;

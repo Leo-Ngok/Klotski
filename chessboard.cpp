@@ -78,9 +78,6 @@ void ChessBoard::paintEvent(QPaintEvent *) {
                     top_left + vertical_grid_offset * (i + 0.0) +
                     horizontal_offset);
     }
-    // Now we are done!
-    //QPixmap pixmap(":/chess_pieces/Assets/Chesspieces_img/CAO_CAO.PNG");
-    //painter.drawPixmap(40, 50, 240,240,pixmap );
 }
 
 

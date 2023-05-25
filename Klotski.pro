@@ -1,6 +1,6 @@
 QT       += core gui
 
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets multimedia
 
 CONFIG += c++17
 
@@ -11,18 +11,24 @@ CONFIG += c++17
 SOURCES += \
     chessboard.cpp \
     chesspiece.cpp \
+    configcontroller.cpp \
     gamecontroller.cpp \
     main.cpp \
     mainwindow.cpp \
     recordhandler.cpp \
+    replaycontroller.cpp \
+    scoreboardcontroller.cpp \
     statecontroller.cpp
 
 HEADERS += \
     chessboard.h \
     chesspiece.h \
+    configcontroller.h \
     gamecontroller.h \
     mainwindow.h \
     recordhandler.h \
+    replaycontroller.h \
+    scoreboardcontroller.h \
     statecontroller.h
 
 FORMS += \

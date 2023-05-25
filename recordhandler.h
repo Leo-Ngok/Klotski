@@ -6,6 +6,10 @@
 #include <QObject>
 #include <vector>
 #include <QFile>
+#include <QDateTime>
+#include <QJsonObject>
+#include <QJsonArray>
+#include <QFileDialog>
 
 
 struct ChessConfig {
@@ -17,7 +21,7 @@ struct ChessConfig {
 struct SceneStatus {
     int count;
     int time;
-    std::vector<ChessConfig> chesspieces;
+    QJsonArray chesspieces;
 };
 
 struct GameplayRecord{
@@ -33,17 +37,18 @@ class RecordHandler : public QObject
 public:
     explicit RecordHandler(QObject *parent = nullptr);
     void setController(GameController *gc);
-    //void setRankingFile(QFile *file);
-    const char *ranking_filename;
+    char ranking_filename[256];
+    QString records_dir;
 signals:
 public slots:
     void Record();
     void SaveGame(QString name);
     void Reset();
+    void HandleCapture();
+
 private:
     GameController *controller;
-    std::vector<SceneStatus> records;
-    QFile *ranking_file;
+    QJsonArray records;
 };
 
 #endif // RECORDHANDLER_H

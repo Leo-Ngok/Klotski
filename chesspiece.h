@@ -53,4 +53,14 @@ const std::map<QString, ChessType> strtotype = {
     {"ZHAO_YUN", ChessType::ZHAO_YUN},
     {"SOLDIER", ChessType::SOLDIER},
 };
+
+const std::map<ChessType, QString> typetostr = {
+    {ChessType::CAO_CAO,     "CAO_CAO"},
+    {ChessType::GUAN_YU,     "GUAN_YU"},
+    {ChessType::HUANG_ZHONG, "HUANG_ZHONG"},
+    {ChessType::MA_CHAO,     "MA_CHAO"},
+    {ChessType::ZHANG_FEI,   "ZHANG_FEI"},
+    {ChessType::ZHAO_YUN,    "ZHAO_YUN"},
+    {ChessType::SOLDIER,     "SOLDIER"},
+};
 #endif // CHESSPIECE_H

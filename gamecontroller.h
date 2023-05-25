@@ -17,6 +17,12 @@
 #include <QLabel>
 #include <QMessageBox>
 #include <QInputDialog>
+#include <QMainWindow>
+#include <QSoundEffect>
+#include <QMediaPlayer>
+#include <QAudioOutput>
+
+#define CHESS_MOVE_SOUND_FILE "qrc:/sound_effects/Assets/sound_effects/move.mp3"
 
 enum class MoveType {
     INVALID, UP, DOWN, LEFT, RIGHT
@@ -32,25 +38,28 @@ class GameController : public QObject
 public:
     explicit GameController(QObject *parent = nullptr);
     void ConstructChessboard();
-    void ConstructChesspieces();
+    bool ConstructChesspieces(QString filename);
     void ConstructUI();
-    void LoadInitFile(const char*);
     size_t      chess_count = 0;
     Chesspiece *curr_piece[DIM_X][DIM_Y] = {{0}};
-    Chesspiece  **cp;
+    Chesspiece  **cp = nullptr;
     int         step_count = 0;
     int         curr_time_elapsed = 0;
 signals:
     void MouseClick(QPoint &);
     void BackToHomeScreen();
     void GameEnded(QString name);
+    void SaveProgress();
+    void CaptureScene();
 private slots:
     void OnFlashElapsed();
     void OnStopwatchElapsed();
+    void OnBackHomeClicked();
 public slots:
     void OnMouseClick(QMouseEvent *);
     void Reset();
     void LoadGame();
+    void OnCaptureBtnClick();
 private:
     bool AdjustChessList(Chesspiece *piece, int x, int y);
     bool AdjustByType(Chesspiece *piece, MoveType mvt);
@@ -60,19 +69,25 @@ private:
     void SaveRecord();
     void SaveGamePlay();
 
-    ChessBoard  *chessBoard;
-    QFile       *chessboardinitconfig;
-    QTimer      *flash_timer;
-    Chesspiece  *sel_chess; // the chess being chosen
+    ChessBoard  *chessBoard     = nullptr;
+    QTimer      *flash_timer    = nullptr;
 
-    QTimer      *stopwatch;
+    // the chess being chosen
+    Chesspiece  *sel_chess      = nullptr;
 
-    QLabel      *time_caption;
-    QLCDNumber  *counter_disp;
+    /* Panel on right hand side. */
+    QTimer      *stopwatch      = nullptr;
 
-    QLabel      *step_caption;
-    QLCDNumber  *step_disp;
-    QPushButton *quitButton;
+    QLabel      *time_caption   = nullptr;
+    QLCDNumber  *counter_disp   = nullptr;
+
+    QLabel      *step_caption   = nullptr;
+    QLCDNumber  *step_disp      = nullptr;
+
+    QPushButton *scene_capture  = nullptr;
+    QPushButton *quitButton     = nullptr;
+    bool enabled = true;
+    bool play_chess_move = false;
 };
 
 #endif // GAMECONTROLLER_H

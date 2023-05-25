@@ -11,4 +11,8 @@
     <qresource prefix="/chessboard_init_config">
         <file>Assets/Initial_configurations/default.json</file>
     </qresource>
+    <qresource prefix="/sound_effects">
+        <file>Assets/sound_effects/move.mp3</file>
+        <file>Assets/sound_effects/bgm.mp3</file>
+    </qresource>
 </RCC>
