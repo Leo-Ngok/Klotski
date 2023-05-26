@@ -107,7 +107,7 @@ void ScoreboardController::Unload() {
 
 void ScoreboardController::ShowLeastSteps(){
     std::sort(records.begin(), records.end(), [](const GameplayRecord &a, const GameplayRecord &b) {
-        return a.step < b.step;
+        return (a.step == b.step) ? a.time_elapsed < b.time_elapsed : a.step < b.step;
     });
     size_t n = records.size();
     if(n > 5) n = 5;
@@ -125,7 +125,7 @@ void ScoreboardController::ShowLeastSteps(){
 }
 void ScoreboardController::ShowLeastTimeElapsed(){
     std::sort(records.begin(), records.end(), [](const GameplayRecord &a, const GameplayRecord &b) {
-        return a.time_elapsed < b.time_elapsed;
+        return (a.time_elapsed == b.time_elapsed) ? a.step < b.step : a.time_elapsed < b.time_elapsed;
     });
     size_t n = records.size();
     if(n > 5) n = 5;
